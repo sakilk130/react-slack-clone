@@ -10,3 +10,11 @@
   --green: #0a8d48;
   --dark-green: #095e30;
 }
+
+.app__body {
+  display: flex;
+  height: 100vh;
+}
+body {
+  overflow: hidden;
+}
