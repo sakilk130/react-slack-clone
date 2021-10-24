@@ -17,8 +17,10 @@ import AddIcon from '@material-ui/icons/Add';
 import LoopIcon from '@material-ui/icons/Loop';
 import SidebarOption from './SidebarOption';
 import db from '../firebase/config';
+import { useStateValue } from '../context-api/StateProvider';
 
 function Sidebar() {
+  const [{ user }] = useStateValue();
   const [channels, setChannels] = useState([]);
   useEffect(() => {
     db.collection('rooms').onSnapshot((snapshot) =>
@@ -35,10 +37,10 @@ function Sidebar() {
     <div className="sidebar">
       <div className="sidebar__header">
         <div className="sidebar___info">
-          <h2>Software Engineers</h2>
+          <h2>Programmers</h2>
           <h3>
             <FiberManualRecordIcon />
-            Sakil Khan
+            {user?.displayName}
           </h3>
         </div>
         <CreateIcon />
