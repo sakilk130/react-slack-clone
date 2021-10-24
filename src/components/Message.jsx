@@ -3,13 +3,16 @@ import React from 'react';
 import '../styles/Message.css';
 import moment from 'moment';
 
-const Message = ({ message, timestamp, user, userImage }) => {
+const Message = ({ message, timestamp, user, userImage, emptyMessage }) => {
+  if (emptyMessage) {
+    return <div className="message">No messages...</div>;
+  }
   return (
     <div className="message">
       <img src={userImage} alt="" />
       <div className="message__info">
         <h4>
-          {user}{' '}
+          {user}
           <span className="message__timestamp">
             {moment(new Date(timestamp?.toDate()).toUTCString()).fromNow()}
           </span>

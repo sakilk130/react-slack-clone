@@ -14,21 +14,26 @@ import AppsIcon from '@material-ui/icons/Apps';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
-import LoopIcon from '@material-ui/icons/Loop';
 import SidebarOption from './SidebarOption';
 import db from '../firebase/config';
 import { useStateValue } from '../context-api/StateProvider';
+import ContentLoader from 'react-content-loader';
 
 function Sidebar() {
   const [{ user }] = useStateValue();
   const [channels, setChannels] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    db.collection('rooms').onSnapshot((snapshot) =>
-      setChannels(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          name: doc.data().name,
-        }))
+    db.collection('rooms').onSnapshot(
+      (snapshot) => (
+        setChannels(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            name: doc.data().name,
+          }))
+        ),
+        setLoading(false)
       )
     );
   }, []);
@@ -58,9 +63,28 @@ function Sidebar() {
       <hr />
       <SidebarOption Icon={AddIcon} addChannelOption title="Add Channels" />
       {/* Connect to database and list all channels */}
-      {channels.map((channel) => (
-        <SidebarOption key={channel.id} title={channel.name} id={channel.id} />
-      ))}
+
+      {loading ? (
+        <ContentLoader
+          speed={2}
+          width={400}
+          height={160}
+          viewBox="0 0 400 160"
+          backgroundColor="#49274b"
+          foregroundColor="#ecebeb"
+        >
+          <rect x="28" y="30" rx="0" ry="0" width="92" height="8" />
+          <rect x="30" y="52" rx="0" ry="0" width="89" height="8" />
+        </ContentLoader>
+      ) : (
+        channels.map((channel) => (
+          <SidebarOption
+            key={channel.id}
+            title={channel.name}
+            id={channel.id}
+          />
+        ))
+      )}
     </div>
   );
 }
